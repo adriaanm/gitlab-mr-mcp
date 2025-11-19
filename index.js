@@ -14,9 +14,14 @@ if (!gitlabToken) {
   console.error("Error: MR_MCP_GITLAB_TOKEN or GITLAB_PRIVATE_TOKEN environment variable is not set.");
 }
 
-const gitlabHost = getEnv("MR_MCP_GITLAB_HOST") || getEnv("GITLAB_DOMAIN");
+let gitlabHost = getEnv("MR_MCP_GITLAB_HOST") || getEnv("GITLAB_DOMAIN");
 if (!gitlabHost) {
   console.error("Error: MR_MCP_GITLAB_HOST or GITLAB_DOMAIN environment variable is not set.");
+}
+
+// Ensure the host has the https:// protocol
+if (gitlabHost && !gitlabHost.startsWith("http://") && !gitlabHost.startsWith("https://")) {
+  gitlabHost = `https://${gitlabHost}`;
 }
 
 const api = new Gitlab({
