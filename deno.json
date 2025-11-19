@@ -1,0 +1,6 @@
+{
+  "tasks": {
+    "start": "deno run --allow-net=${GITLAB_DOMAIN:-gitlab.com} --allow-env=MR_MCP_GITLAB_TOKEN,GITLAB_PRIVATE_TOKEN,MR_MCP_GITLAB_HOST,GITLAB_DOMAIN,MR_MCP_MIN_ACCESS_LEVEL,MR_MCP_PROJECT_SEARCH_TERM index.js"
+  },
+  "nodeModulesDir": false
+}

@@ -22,6 +22,43 @@ This project implements a server using the Model Context Protocol (MCP) that all
 
 ## 📦 Installation
 
+### 🔒 Secure Installation with Deno (Recommended)
+
+This installation method uses Deno to restrict network access to only your GitLab domain, providing better security isolation.
+
+#### 🔧 Prerequisites
+
+- [Deno](https://deno.land/) installed (`curl -fsSL https://deno.land/install.sh | sh`)
+- GitLab access token with API access
+- Your GitLab domain (e.g., `gitlab.transics-cicd.aws.zf.com`)
+
+#### 📖 Setup
+
+1. Clone this repository
+2. Set environment variables:
+
+```bash
+export GITLAB_DOMAIN="gitlab.transics-cicd.aws.zf.com"  # Your GitLab domain
+export GITLAB_PRIVATE_TOKEN="your_gitlab_token"  # Or use MR_MCP_GITLAB_TOKEN
+```
+
+3. Add the following to your MCP client configuration:
+```json
+{
+  "mcpServers": {
+    "gitlab-mr-mcp": {
+      "command": "/path/to/gitlab-mr-mcp/run-deno.sh",
+      "env": {
+        "GITLAB_PRIVATE_TOKEN": "your_gitlab_token",
+        "GITLAB_DOMAIN": "gitlab.transics-cicd.aws.zf.com"
+      }
+    }
+  }
+}
+```
+
+**Security Note:** The Deno runtime restricts network access to ONLY the domain specified in `GITLAB_DOMAIN`, preventing the server from accessing any other network resources.
+
 ### ⚡ Using Smithery
 
 To install GitLab MR MCP for Claude Desktop automatically via Smithery:
@@ -30,7 +67,7 @@ To install GitLab MR MCP for Claude Desktop automatically via Smithery:
 npx -y @smithery/cli@latest install @kopfrechner/gitlab-mr-mcp --client claude --config '"{\"gitlabMrMcpToken\":\"YOUR_GITLAB_TOKEN\", \"gitlabMrMcpHost\": \"YOUR_GITLAB_HOST\"}"'
 ```
 
-### 🛠️ Manual Installation
+### 🛠️ Manual Installation (Node.js)
 
 #### 🔧 Prerequisites
 
@@ -62,6 +99,8 @@ npm install
   }
 }
 ```
+
+**Note:** The code is compatible with both Node.js and Deno runtimes.
 
 ## 🛠️ Available Tools
 

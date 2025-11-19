@@ -1,23 +1,26 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { Gitlab } from "@gitbeaker/rest";
-import { exec } from "child_process";
-import { promisify } from "util";
-import { z } from "zod";
-import _ from "lodash";
+import { McpServer } from "npm:@modelcontextprotocol/sdk@1.17.2/server/mcp.js";
+import { StdioServerTransport } from "npm:@modelcontextprotocol/sdk@1.17.2/server/stdio.js";
+import { Gitlab } from "npm:@gitbeaker/rest@43.4.0";
+import { z } from "npm:zod@4.0.17";
+import _ from "npm:lodash@4.17.21";
 
-
-// Promisify exec for async usage
-const execAsync = promisify(exec);
+// Environment access - works for both Node.js and Deno
+const getEnv = (key) => typeof Deno !== "undefined" ? Deno.env.get(key) : process.env[key];
+const exitProcess = (code) => typeof Deno !== "undefined" ? Deno.exit(code) : process.exit(code);
 
 // Initialize GitLab API Client
-const gitlabToken = process.env.MR_MCP_GITLAB_TOKEN;
+const gitlabToken = getEnv("MR_MCP_GITLAB_TOKEN") || getEnv("GITLAB_PRIVATE_TOKEN");
 if (!gitlabToken) {
-  console.error("Error: MR_MCP_GITLAB_TOKEN environment variable is not set.");
+  console.error("Error: MR_MCP_GITLAB_TOKEN or GITLAB_PRIVATE_TOKEN environment variable is not set.");
+}
+
+const gitlabHost = getEnv("MR_MCP_GITLAB_HOST") || getEnv("GITLAB_DOMAIN");
+if (!gitlabHost) {
+  console.error("Error: MR_MCP_GITLAB_HOST or GITLAB_DOMAIN environment variable is not set.");
 }
 
 const api = new Gitlab({
-  host: process.env.MR_MCP_GITLAB_HOST,
+  host: gitlabHost,
   token: gitlabToken,
 });
 
@@ -44,8 +47,8 @@ server.tool(
   async ({ verbose }) => {
     try {
       const projectFilter = {
-        ...(process.env.MR_MCP_MIN_ACCESS_LEVEL ? { minAccessLevel: parseInt(process.env.MR_MCP_MIN_ACCESS_LEVEL, 10) } : {}),
-        ...(process.env.MR_MCP_PROJECT_SEARCH_TERM ? { search: process.env.MR_MCP_PROJECT_SEARCH_TERM } : {}),
+        ...(getEnv("MR_MCP_MIN_ACCESS_LEVEL") ? { minAccessLevel: parseInt(getEnv("MR_MCP_MIN_ACCESS_LEVEL"), 10) } : {}),
+        ...(getEnv("MR_MCP_PROJECT_SEARCH_TERM") ? { search: getEnv("MR_MCP_PROJECT_SEARCH_TERM") } : {}),
       }
       const projects = await api.Projects.all({ membership: true, ...projectFilter });
       const filteredProjects = verbose ? projects : projects.map(project => ({
@@ -328,6 +331,6 @@ server.tool(
     await server.connect(transport);
   } catch (error) {
     console.error("Failed to start server:", error.message);
-    process.exit(1);
+    exitProcess(1);
   }
 })();
