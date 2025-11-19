@@ -157,6 +157,7 @@ server.registerTool("get_merge_request_comments", {
       noteable_id: note.noteable_id,
       body: note.body,
       author_name: note.author.name,
+      position: note.position,
     }));
     const diffNotes = unresolvedNotes.filter(note => note.type === "DiffNote").map(note => ({
       id: note.id,
