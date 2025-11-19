@@ -34,6 +34,8 @@ fi
 cd "$(dirname "$0")"
 
 "$DENO_PATH" run \
+  --node-modules-dir=auto \
   --allow-net="$GITLAB_DOMAIN" \
   --allow-env=MR_MCP_GITLAB_TOKEN,GITLAB_PRIVATE_TOKEN,MR_MCP_GITLAB_HOST,GITLAB_DOMAIN,MR_MCP_MIN_ACCESS_LEVEL,MR_MCP_PROJECT_SEARCH_TERM \
+  --allow-read \
   index.js

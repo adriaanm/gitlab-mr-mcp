@@ -1,8 +1,8 @@
-import { McpServer } from "npm:@modelcontextprotocol/sdk@1.17.2/server/mcp.js";
-import { StdioServerTransport } from "npm:@modelcontextprotocol/sdk@1.17.2/server/stdio.js";
-import { Gitlab } from "npm:@gitbeaker/rest@43.4.0";
-import { z } from "npm:zod@4.0.17";
-import _ from "npm:lodash@4.17.21";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { Gitlab } from "@gitbeaker/rest";
+import { z } from "zod";
+import _ from "lodash";
 
 // Environment access - works for both Node.js and Deno
 const getEnv = (key) => typeof Deno !== "undefined" ? Deno.env.get(key) : process.env[key];

@@ -36,7 +36,13 @@ This installation method uses Deno to restrict network access to only your GitLa
 
 1. Clone this repository
 
-2. Set environment variables:
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set environment variables:
 
 ```bash
 export GITLAB_DOMAIN="gitlab.transics-cicd.aws.zf.com"  # Your GitLab domain (https:// is added automatically)
@@ -45,13 +51,13 @@ export GITLAB_PRIVATE_TOKEN="your_gitlab_token"  # Or use MR_MCP_GITLAB_TOKEN
 
 **Note:** The `https://` protocol is automatically prepended to `GITLAB_DOMAIN` if not present.
 
-3. Install Deno (if not already installed):
+4. Install Deno (if not already installed):
 
 ```bash
 curl -fsSL https://deno.land/install.sh | sh
 ```
 
-4. Configure globally with Claude Code:
+5. Configure globally with Claude Code:
 
 ```bash
 claude mcp add --transport stdio gitlab-mr --scope user \
