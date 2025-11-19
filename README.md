@@ -35,6 +35,7 @@ This installation method uses Deno to restrict network access to only your GitLa
 #### 📖 Setup
 
 1. Clone this repository
+
 2. Set environment variables:
 
 ```bash
@@ -42,7 +43,22 @@ export GITLAB_DOMAIN="gitlab.transics-cicd.aws.zf.com"  # Your GitLab domain
 export GITLAB_PRIVATE_TOKEN="your_gitlab_token"  # Or use MR_MCP_GITLAB_TOKEN
 ```
 
-3. Add the following to your MCP client configuration:
+3. Install Deno (if not already installed):
+
+```bash
+curl -fsSL https://deno.land/install.sh | sh
+```
+
+4. Configure globally with Claude Code:
+
+```bash
+claude mcp add --transport stdio gitlab-mr --scope user \
+  --env GITLAB_PRIVATE_TOKEN="${GITLAB_PRIVATE_TOKEN}" \
+  --env GITLAB_DOMAIN="${GITLAB_DOMAIN}" \
+  -- /absolute/path/to/gitlab-mr-mcp/run-deno.sh
+```
+
+Or add manually to your MCP client configuration:
 ```json
 {
   "mcpServers": {
