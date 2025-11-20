@@ -144,6 +144,7 @@ server.registerTool("get_merge_request_comments", {
 }, async ({ project_id, merge_request_iid, verbose }) => {
   try {
     const discussions = await api.MergeRequestDiscussions.all(project_id, merge_request_iid);
+    const project_slug = await api.Projects.show(project_id).then(proj => proj.path_with_namespace);
 
     if (verbose) {
       return {
@@ -157,7 +158,6 @@ server.registerTool("get_merge_request_comments", {
       noteable_id: note.noteable_id,
       body: note.body,
       author_name: note.author.name,
-      position: note.position,
     }));
     const diffNotes = unresolvedNotes.filter(note => note.type === "DiffNote").map(note => ({
       id: note.id,
@@ -165,6 +165,8 @@ server.registerTool("get_merge_request_comments", {
       body: note.body,
       author_name: note.author.name,
       position: note.position,
+      resolved: note.resolved,
+      url: `${gitlabHost}/${project_slug}/-/merge_requests/${merge_request_iid}#note_${note.id}`,
     }));
     return {
       content: [{
